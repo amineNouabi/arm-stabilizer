@@ -13,12 +13,12 @@ export class CircularBuffer<T> {
 	isFull: Boolean;
 
 	constructor(size: number=20) {
-	  this.buffer = new Array<T>(size);
-	  this.head = 0;
-	  this.tail = 0;
-	  this.isFull = false;
+		this.buffer = new Array<T>(size);
+		this.head = 0;
+		this.tail = 0;
+		this.isFull = false;
 	}
-  
+
 	push(item: T) {
 		this.buffer[this.tail] = item;
 		this.tail = (this.tail + 1) % this.buffer.length;
@@ -50,7 +50,7 @@ export class CircularBuffer<T> {
 	
 		for (const [key, buffer] of Object.entries(buffers))
 			data[key] = buffer.toArray();
-	
+
 		return data;
 	}
 }
