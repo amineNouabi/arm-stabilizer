@@ -33,10 +33,13 @@ export class CircularBuffer<T> {
 	}
 
 	toArray() {
-		if (!this.isFull)
-			return this.buffer.slice(this.head, this.tail);
-		else
-			return [...this.buffer.slice(this.tail), ...this.buffer.slice(0, this.tail)];
+		if (!this.isFull) {
+			return this.buffer.slice(this.head, this.tail).filter((item) => item !== null);
+		} else {
+			const tailSlice = this.buffer.slice(this.tail).filter((item) => item !== null);
+			const headSlice = this.buffer.slice(0, this.tail).filter((item) => item !== null);
+			return [...tailSlice, ...headSlice];
+		}
 	}
 
 	/**

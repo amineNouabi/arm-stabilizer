@@ -12,6 +12,8 @@ import { CircularBuffer } from './utils/circular-buffer';
 // let serial = null;
 // let parser = null;
 
+const start_date = Date.now();
+
 const server_port = process.env.PORT || 3000;
 
 const circular_buffers = {
@@ -33,12 +35,22 @@ const circular_buffers = {
 const app = express();
 
 // Allow cross-origin requests
-app.use(cors());
+app.use(
+	cors({
+		origin: '*',
+		methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+	}
+));
 
 const server = http.createServer(app);
 
 // Create a Socket.IO server
-const io = new Server(server);
+const io = new Server(server, {
+	cors: {
+		origin: '*',
+		methods: ['GET', 'POST'],
+	},
+});
 
 // Serve static files from the "public" directory
 app.use(express.static('public'));
@@ -100,16 +112,16 @@ server.listen(server_port, () => {
 	// Generate random data every 500ms
 	setInterval(() => {
 		// Generate random values
-		const ax = Math.random() * 40 - 20;
-		const ay = Math.random() * 40 - 20;
-		const az = Math.random() * 40 - 20;
-		const gx = Math.random() * 40 - 20;
-		const gy = Math.random() * 40 - 20;
-		const gz = Math.random() * 40 - 20;
-		const mx = Math.random() * 40 - 20;
-		const my = Math.random() * 40 - 20;
-		const mz = Math.random() * 40 - 20;
-		const time = Date.now();
+		const ax = Number((Math.random() * 40 - 20).toFixed(2));
+		const ay = Number((Math.random() * 40 - 20).toFixed(2));
+		const az = Number((Math.random() * 40 - 20).toFixed(2));
+		const gx = Number((Math.random() * 40 - 20).toFixed(2));
+		const gy = Number((Math.random() * 40 - 20).toFixed(2));
+		const gz = Number((Math.random() * 40 - 20).toFixed(2));
+		const mx = Number((Math.random() * 40 - 20).toFixed(2));
+		const my = Number((Math.random() * 40 - 20).toFixed(2));
+		const mz = Number((Math.random() * 40 - 20).toFixed(2));
+		const time = Number(((Date.now() - start_date) / 1000).toFixed(2));
 
 		console.log('Generated data: ', ax, ay, az, gx, gy, gz, mx, my, mz, time);
 
@@ -125,9 +137,11 @@ server.listen(server_port, () => {
 		circular_buffers.mz.push(mz);
 		circular_buffers.time.push(time);
 
+		console.log('Circular Buffers: ', circular_buffers);
+
 		// Emit the data to all connected Socket.IO clients
 		io.emit('arduino:data', JSON.stringify(CircularBuffer.parse_circular_buffers(circular_buffers)));
-	}, 500);
+	}, 100);
 
 });
 
