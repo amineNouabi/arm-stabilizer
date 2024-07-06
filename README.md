@@ -7,13 +7,13 @@ This is a work in progress. Some of the code may not work as expected.
 
 This project is about stabilizing a rotating arm. The arm is mounted on a pivot and is free to rotate in the horizontal plane.
 
-<img src="ressources/function.png">
+<img src="resources/function.png">
 
 The goal is to stabilize the arm in the horizontal position. The arm is equipped with two motors that can apply a torque to the arm. The motor is controlled by a microcontroller. The microcontroller reads the angle of the arm and applies a torque to the arm to stabilize it.
 
 ## 3D model
 
-<img src="ressources/3d-cad.png" style="background-color: white;">
+<img src="resources/3d-cad.png" style="background-color: white;">
 
 ## Hardware
 
