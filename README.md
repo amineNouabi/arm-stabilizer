@@ -5,11 +5,11 @@ This is a work in progress. Some of the code may not work as expected.
 
 ## Introduction
 
-This project is about stabilizing a rotating arm. The arm is mounted on a pivot and is free to rotate in the horizontal plane.
+This project is about stabilizing a rotating arm. The arm is mounted on a pivot and is free to rotate in the vertical plane.
 
 <img src="resources/function.png">
 
-The goal is to stabilize the arm in the horizontal position. The arm is equipped with two motors that can apply a torque to the arm. The motor is controlled by a microcontroller. The microcontroller reads the angle of the arm and applies a torque to the arm to stabilize it.
+The goal is to stabilize the arm in the horizontal position (angle = 0). The arm is equipped with two motors and their propellers that can apply a torque to the arm. The motor is controlled by a microcontroller. The microcontroller reads the angle of the arm and applies a torque to the arm to stabilize it.
 
 ## 3D model
 
@@ -49,3 +49,8 @@ The dashboard is a web application that displays data from the microcontroller i
 ### Server
 
 The server communicates with the microcontroller and emits data to the dashboard. The server is built using Node.js and Socket.io.
+
+## Authors
+
+- [Ahmed Amine Nouabi](https://github.com/amineNouabi)
+- [Soufiane Finiix]
