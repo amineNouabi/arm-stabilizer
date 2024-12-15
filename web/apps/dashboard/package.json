@@ -1,0 +1,31 @@
+{
+  "name": "@arm-stabilizer/dashboard",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "clean": "rm -rf .next node_modules",
+    "dev": "next dev -p 3002",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@amcharts/amcharts5": "^5.10.8",
+    "@arm-stabilizer/logger": "workspace:*",
+    "@arm-stabilizer/ui": "workspace:*",
+    "next": "^14.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@arm-stabilizer/eslint-config": "workspace:*",
+    "@arm-stabilizer/typescript-config": "workspace:*",
+    "@next/eslint-plugin-next": "^14.1.1",
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.2.62",
+    "@types/react-dom": "^18.2.19",
+    "typescript": "5.5.4"
+  }
+}

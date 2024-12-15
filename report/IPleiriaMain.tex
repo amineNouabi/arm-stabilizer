@@ -1,0 +1,85 @@
+% Packages & Document Configurations
+\documentclass[en]{IPLeiriaThesis}
+
+% Authors & Supervisor
+\firstauthor{Ahmed Amine NOUABI}
+
+\secondauthor{Jane Smith}
+
+\supervisor{TALEB}
+
+% Title & Subtitle
+\title{Mise en œuvre et stabilisation d'un bras de drone quadrirotor}
+\subtitle{Projet Métier}
+
+% Filiations
+\university{Ecole Nationale Supérieure des Arts et Métiers Meknes}
+% \degree{MSc Cybersecurity \& Digital Forensics}
+% \school{School of Management and Technology}
+% \course{Offensive \& Defensive Cybersecurity}
+
+% Local & Date
+\date{Meknes, \DTMmonthname{\month} \number\year}
+
+% Make and Load Glossary & Acronyms
+\makeglossaries
+\loadglsentries{Matter/05-Glossary}
+\loadglsentries[\acronymtype]{Matter/06-Acronyms}
+
+\begin{document}
+
+% Front Matter
+\include{Matter/01-FrontPage}
+
+% Roman numeration
+\pagenumbering{roman}
+
+
+% Acknowledgements
+\include{Matter/04-Acknowledgements}
+
+% Abstract
+\include{Chapters/0-Abstract}
+
+% List of contents, figures, and tables
+\tableofcontents
+\listoffigures
+\listoftables
+
+% Print Glossary & Acronym
+\printglossary
+% \plainblankpage
+\printglossary[type=\acronymtype]
+% \plainblankpage
+
+% Arabic numeration
+\pagenumbering{arabic}
+
+% Chapters
+\include{Chapters/1-Introduction}
+\include{Chapters/2-Bibliography}
+
+\include{Chapters/02-Citations}
+\include{Chapters/03-Figures}
+\include{Chapters/04-Tables}
+\include{Chapters/05-Lists}
+\include{Chapters/06-Code}
+\include{Chapters/07-Conclusion}
+
+% Bibliography
+\blankpage\printbibliography
+
+% Appendices: Work that *YOU* developed
+\appendix
+\input{Matter/07-Appendices}
+\input{Chapters/Appendices/00-AppendixA}
+\input{Chapters/Appendices/01-AppendixB}
+
+% Annexes: Work that *YOU DID NOT* developed
+\input{Matter/08-Annexes}
+\input{Chapters/Annexes/00-AnnexA}
+
+% Back Page
+\input{Matter/09-BackPage}
+
+\end{document}

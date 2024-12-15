@@ -1,0 +1,12 @@
+{
+  "eslint.format.enable": true,
+  "eslint.workingDirectories": [
+    "apps/api",
+    "apps/dashboard",
+    "packages/config-eslint",
+    "packages/config-typescript",
+    "packages/jest-presets",
+    "packages/logger",
+    "packages/ui"
+  ]
+}

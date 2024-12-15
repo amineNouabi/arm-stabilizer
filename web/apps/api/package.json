@@ -1,0 +1,43 @@
+{
+  "name": "@arm-stabilizer/api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "tsup --watch --onSuccess \"node dist/index.js\"",
+    "build": "tsup",
+    "clean": "rm -rf dist node_modules",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/",
+    "test": "jest --detectOpenHandles"
+  },
+  "jest": {
+    "preset": "@arm-stabilizer/jest-presets/node"
+  },
+  "dependencies": {
+    "@arm-stabilizer/logger": "workspace:*",
+    "@serialport/parser-readline": "^12.0.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.3",
+    "morgan": "^1.10.0",
+    "serialport": "^12.0.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@arm-stabilizer/eslint-config": "workspace:*",
+    "@arm-stabilizer/jest-presets": "workspace:*",
+    "@arm-stabilizer/typescript-config": "workspace:*",
+    "@jest/globals": "^29.7.0",
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.11.24",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
+    "tsup": "^8.0.2",
+    "typescript": "5.5.4"
+  }
+}
