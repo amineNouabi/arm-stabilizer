@@ -38,7 +38,8 @@ The arduino code reads the angle of the arm from the IMU sensor and applies a to
 
 #### Components
 
-- `MPUSensor`: A class that encapsulates the MPU sensor readings, configuration, and filtering.
+- `MPUSensor`: A class that encapsulates the MPU sensor readings and configuration using `I2CInterface` and filtering.
+- `I2CInterface`: A class that encapsulates the I2C communication with the MPU sensor.
 - `MotorsController`: A class that encapsulates the motor control logic and the PID controller.
 
 ### Dashboard
