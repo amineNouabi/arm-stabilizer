@@ -1,53 +1,29 @@
 'use client';
-import { Charts } from '@/components/Charts';
-import { socket } from '@/lib/socket';
-import { log } from '@arm-stabilizer/logger';
-import { useEffect, useState } from 'react';
 
-export default function Page(): JSX.Element {
-  const [isConnected, setIsConnected] = useState(false);
-  const [transport, setTransport] = useState('N/A');
+import { HomeCharts } from '@/components/charts/home-charts';
+import { Spinner } from '@/components/ui/spinner';
+import { useSocket } from '@/providers/socket-provider';
 
-  useEffect(() => {
-    if (socket.connected) {
-      log('already connected');
-      onConnect();
-    }
+export default function HomePage(): JSX.Element {
+  const { isConnected } = useSocket();
 
-    function onConnect(): void {
-      setIsConnected(true);
-      setTransport(socket.io.engine.transport.name);
+  if (!isConnected) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          width: '100%',
+        }}
+      >
+        <h1>Connecting...</h1>
+        <Spinner size="large" />
+      </div>
+    );
+  }
 
-      socket.io.engine.on('upgrade', (transport) => {
-        setTransport(transport.name);
-      });
-    }
-
-    function onDisconnect(): void {
-      setIsConnected(false);
-      setTransport('N/A');
-    }
-
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
-
-    return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-    };
-  }, []);
-
-  return (
-    <div
-      style={{
-        padding: '3rem',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-      }}
-    >
-      <Charts socket={socket} />
-    </div>
-  );
+  return <HomeCharts />;
 }

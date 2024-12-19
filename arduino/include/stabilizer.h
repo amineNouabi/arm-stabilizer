@@ -1,7 +1,7 @@
 #ifndef _STABILIZER_H_
 #define _STABILIZER_H_
 
-#define DEBUG_LOGS
+// #define DEBUG_LOGS
 
 // #define LOG_RAW_MPU
 // #define LOG_ANGLE

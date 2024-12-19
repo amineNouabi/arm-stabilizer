@@ -3,7 +3,15 @@
 MPUSensor ::MPUSensor(
 	float delta_t, uint8_t mpu_address = MPU6050_DEFAULT_ADDRESS, uint8_t gyro_fs = MPU6050_GYRO_FS_250, uint8_t accel_fs = MPU6050_ACCEL_FS_4, uint8_t dlpf_bw = MPU6050_DLPF_BW_42)
 	: accel_fs(accel_fs), gyro_fs(gyro_fs), dlpf_bw(dlpf_bw),
-	  roll(0), pitch(0), yaw(0),
+	  roll_deg(0), pitch_deg(0), yaw_deg(0),
+	  roll_rad(0), pitch_rad(0), yaw_rad(0),
+	  a_roll(0), a_pitch(0),
+	  g_roll(0), g_pitch(0), g_yaw(0),
+	  ax_raw(0), ay_raw(0), az_raw(0),
+	  gx_raw(0), gy_raw(0), gz_raw(0),
+	  ax_g(0), ay_g(0), az_g(0),
+	  gx_rad_s(0), gy_rad_s(0), gz_rad_s(0),
+	  gx_deg_s(0), gy_deg_s(0), gz_deg_s(0),
 	  i2c(mpu_address, I2C_DEFAULT_TIMEOUT),
 	  delta_t(delta_t)
 {
@@ -114,12 +122,12 @@ void MPUSensor::setup()
 	}
 
 	// Set the Clock Source to PLL with X axis gyroscope reference
-	// 	if (!i2c.writeBits(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_CLKSEL_BIT, MPU6050_PWR1_CLKSEL_LENGTH, 0x01))
-	// 	{
-	// #ifdef DEBUG_LOGS
-	// 		Serial.println("Error: Could not set the clock source to PLL with X axis gyroscope reference.");
-	// #endif
-	// 	}
+	if (!i2c.writeBits(MPU6050_RA_PWR_MGMT_1, MPU6050_PWR1_CLKSEL_BIT, MPU6050_PWR1_CLKSEL_LENGTH, 0x01))
+	{
+#ifdef DEBUG_LOGS
+		Serial.println("Error: Could not set the clock source to PLL with X axis gyroscope reference.");
+#endif
+	}
 
 	// Set the full scale of the gyro to (default = +- 250º/s).
 	if (!i2c.writeBits(MPU6050_RA_GYRO_CONFIG, MPU6050_GCONFIG_FS_SEL_BIT, MPU6050_GCONFIG_FS_SEL_LENGTH, gyro_fs))
@@ -185,12 +193,16 @@ void MPUSensor::readAccelerometer(bool is_calibrating = false)
 	ay_raw = ((((int16_t)buffer[2]) << 8) | buffer[3]);
 	az_raw = ((((int16_t)buffer[4]) << 8) | buffer[5]);
 
-	if (!is_calibrating)
-	{
-		ax = (ax_raw -= ax_offset) / _a_scale[gyro_fs];
-		ay = (ay_raw -= ay_offset) / _a_scale[gyro_fs];
-		az = (az_raw -= az_offset + _a_scale[accel_fs]) / _a_scale[gyro_fs];
-	}
+	if (is_calibrating)
+		return;
+
+	ax_raw -= ax_offset;
+	ay_raw -= ay_offset;
+	az_raw -= az_offset + _a_scale[accel_fs];
+
+	ax_g = ax_raw / _a_scale[accel_fs];
+	ay_g = ay_raw / _a_scale[accel_fs];
+	az_g = az_raw / _a_scale[accel_fs];
 }
 
 void MPUSensor::readGyroscope(bool is_calibrating = false)
@@ -209,12 +221,20 @@ void MPUSensor::readGyroscope(bool is_calibrating = false)
 	gy_raw = (((((int16_t)buffer[2]) << 8) | buffer[3]));
 	gz_raw = (((((int16_t)buffer[4]) << 8) | buffer[5]));
 
-	if (!is_calibrating)
-	{
-		gx = (gx_raw -= gx_offset) / _g_scale[gyro_fs];
-		gy = (gy_raw -= gy_offset) / _g_scale[gyro_fs];
-		gz = (gz_raw -= gz_offset) / _g_scale[gyro_fs];
-	}
+	if (is_calibrating)
+		return;
+
+	gx_raw -= gx_offset;
+	gy_raw -= gy_offset;
+	gz_raw -= gz_offset;
+
+	gx_deg_s = gx_raw / _g_scale[gyro_fs];
+	gy_deg_s = gy_raw / _g_scale[gyro_fs];
+	gz_deg_s = gz_raw / _g_scale[gyro_fs];
+
+	gx_rad_s = gx_deg_s / _r2d;
+	gy_rad_s = gy_deg_s / _r2d;
+	gz_rad_s = gz_deg_s / _r2d;
 }
 
 void MPUSensor::read()
@@ -228,20 +248,37 @@ void MPUSensor::readAndUpdate()
 	read();
 
 	// Roll calculation
-	a_roll = atan2(ay, sqrt(ax * ax + az * az)) * _r2d;
-	g_roll = roll + gx * delta_t;
+	a_roll = atan2(-ay_g, sqrt(ax_g * ax_g + az_g * az_g)) * _r2d;
+	g_roll = roll_deg + gx_deg_s * delta_t;
 
-	roll = _fusion_alpha * g_roll + (1 - _fusion_alpha) * a_roll;
+	roll_deg = _fusion_alpha * g_roll + (1 - _fusion_alpha) * a_roll;
 
 	// Pitch calculation
-	a_pitch = atan2(ax, sqrt(ay * ay + az * az)) * _r2d;
-	g_pitch = pitch + gy * delta_t;
+	a_pitch = atan2(ax_g, sqrt(ay_g * ay_g + az_g * az_g)) * _r2d;
+	g_pitch = pitch_deg + gy_deg_s * delta_t;
 
-	pitch = _fusion_alpha * g_pitch + (1 - _fusion_alpha) * a_pitch;
+	pitch_deg = _fusion_alpha * g_pitch + (1 - _fusion_alpha) * a_pitch;
 
 	// Yaw calculation
-	a_yaw = atan2(ay, sqrt(ax * ax + az * az)) * _r2d;
-	g_yaw = yaw + gz * delta_t;
+	g_yaw = yaw_deg + gz_deg_s * delta_t;
+	yaw_deg = g_yaw;
 
-	yaw = _fusion_alpha * g_yaw + (1 - _fusion_alpha) * a_yaw;
+	///////////////////////////////////////////////////
+	// Roll calculation
+	// a_roll = atan2(-ay_g, sqrt(ax_g * ax_g + az_g * az_g)) * _r2d;
+	// g_roll = roll_deg + delta_t * (gx_deg_s + sin(roll_rad) * tan(pitch_rad) * gy_deg_s + cos(roll_rad) * tan(pitch_rad) * gz_deg_s);
+
+	// roll_deg = _fusion_alpha * g_roll + (1 - _fusion_alpha) * a_roll;
+	// roll_rad = roll_deg / _r2d;
+
+	// // Pitch calculation
+	// a_pitch = atan2(ax_g, sqrt(ay_g * ay_g + az_g * az_g)) * _r2d;
+	// g_pitch = pitch_deg + delta_t * (gy_deg_s * cos(roll_rad) - gz_deg_s * sin(roll_rad));
+
+	// pitch_deg = _fusion_alpha * g_pitch + (1 - _fusion_alpha) * a_pitch;
+	// pitch_rad = pitch_deg / _r2d;
+
+	// // Yaw calculation
+	// yaw_deg = g_yaw = yaw_deg + delta_t * (gy_deg_s * sin(roll_rad) / cos(pitch_rad) + gz_deg_s * cos(roll_rad) / cos(pitch_rad));
+	// yaw_rad = yaw_deg / _r2d;
 }

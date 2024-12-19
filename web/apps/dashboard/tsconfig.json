@@ -2,15 +2,16 @@
   "exclude": ["node_modules"],
   "extends": "@arm-stabilizer/typescript-config/nextjs.json",
   "compilerOptions": {
-  "paths": {
-    "@/*": ["./src/*"]
-  },
-  "outDir": "dist",
-  "plugins": [
-    {
-      "name": "next"
-    }
-  ]
+    "paths": {
+      "@/*": ["./src/*"],
+      "~/*": ["./*"]
+    },
+    "outDir": "dist",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": ["src", "next.config.js", "next-env.d.ts", ".next/types/**/*.ts"]
 }

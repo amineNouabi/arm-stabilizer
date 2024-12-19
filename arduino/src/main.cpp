@@ -9,7 +9,7 @@ uint32_t loop_timer = 0;
 MPUSensor mpuSensor(delta_t);
 MotorsController motorsController(delta_t);
 
-const float pitch_ref = 0.0;
+const float pitch_ref = 0.0f;
 
 void setup()
 {
@@ -30,11 +30,11 @@ void setup()
 
 void loop()
 {
-
+	// Read and update the sensor data: output roll, pitch and yaw
 	mpuSensor.readAndUpdate();
 
 	// Update the motors speed
-	motorsController.updateMotorsSpeed(pitch_ref, mpuSensor.pitch);
+	motorsController.updateMotorsSpeed(pitch_ref, mpuSensor.pitch_deg);
 
 #if defined(DEBUG_LOGS) && defined(LOG_ANGLE)
 	Serial.print("roll\t");
@@ -63,16 +63,33 @@ void loop()
 #endif /* RAW_MPU_DATA */
 
 #ifdef SERIAL_PLOTER
-	Serial.print(mpuSensor.roll);
+	/**
+	 * Serial plotter data format: roll pitch yaw motor1_speed motor2_speed
+	 */
+	Serial.print(mpuSensor.roll_deg);
 	Serial.print("\t");
-	Serial.print(mpuSensor.pitch);
+	Serial.print(mpuSensor.pitch_deg);
 	Serial.print("\t");
-	Serial.print(mpuSensor.yaw);
+	Serial.print(mpuSensor.yaw_deg);
 	Serial.print("\t");
-	Serial.print(motorsController.motor1_speed);
-	Serial.print("\t");
-	Serial.print(motorsController.motor2_speed);
+	Serial.print(motorsController.control_signal);
 	Serial.print("\n");
+
+	/**
+	 * Serial plotter data format: a_roll g_roll a_pitch g_pitch g_yaw
+	 */
+
+	// Serial.print(mpuSensor.a_roll);
+	// Serial.print("\t");
+	// Serial.print(mpuSensor.g_roll);
+	// Serial.print("\t\t\t");
+	// Serial.print(mpuSensor.a_pitch);
+	// Serial.print("\t");
+	// Serial.print(mpuSensor.g_pitch);
+	// Serial.print("\t\t\t");
+	// Serial.print(mpuSensor.g_yaw);
+	// Serial.print("\n");
+
 #endif
 
 	// Wait for the next loop time

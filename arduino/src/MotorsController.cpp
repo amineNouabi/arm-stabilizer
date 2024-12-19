@@ -6,7 +6,7 @@ MotorsController::MotorsController(const float dt, const float kp = 1.0, const f
 void MotorsController::updateMotorsSpeed(float ref_pitch, float pitch)
 {
 	// Compute the control signal using the PID controller
-	float control_signal = pid.compute(ref_pitch, pitch);
+	control_signal = pid.compute(ref_pitch, pitch);
 
 	// Update motor speeds based on the control signal
 	motor1_speed = constrain(MOTORS_MID_SPEED + control_signal, MOTORS_MIN_SPEED, MOTORS_MAX_SPEED);

@@ -17,7 +17,7 @@ public:
 	MotorsController(const float dt, const float kp = 1.0, const float ki = 0.1, const float kd = 0.01);
 	void updateMotorsSpeed(float ref_pitch, float pitch);
 
-	float motor1_speed, motor2_speed;
+	float control_signal, motor1_speed, motor2_speed;
 };
 
 #endif
