@@ -9,7 +9,7 @@ import * as am5xy from '@amcharts/amcharts5/xy';
 import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 
-const MAX_DATA_POINTS = 700; // Define the maximum number of data points
+const MAX_DATA_POINTS = 1000; // Define the maximum number of data points
 
 let orientationRoot: am5.Root;
 
@@ -50,8 +50,8 @@ export function OrientationChart(): React.ReactNode {
       am5xy.ValueAxis.new(orientationRoot, {
         renderer: am5xy.AxisRendererY.new(orientationRoot, {}),
         baseValue: 0,
-        max: 70,
-        min: -70,
+        max: 30,
+        min: -30,
         paddingTop: 0,
       }),
     );

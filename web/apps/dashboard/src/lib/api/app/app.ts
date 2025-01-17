@@ -8,7 +8,7 @@ export interface Status {
 export const getStatus = async (axios: AxiosInstance): Promise<Status> =>
   (await axios.get<Status>('/status')).data;
 
-export const updateBaudRate = async (
+export const updateStatus = async (
   axios: AxiosInstance,
-  baudRate: number,
+  baudRate?: number,
 ): Promise<Status> => (await axios.put<Status>('/status', { baudRate })).data;

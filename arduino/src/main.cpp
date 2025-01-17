@@ -2,11 +2,20 @@
 
 // Define the sampling time 0.004s = 4ms = 4000µs
 const float delta_t = 0.004f;
-const uint16_t delta_t_micros = delta_t * 1e6;
+const uint16_t delta_t_micros = 4000;
+
+const float alpha_fusion = 0.9996f;
 
 uint32_t loop_timer = 0;
 
-MPUSensor mpuSensor(delta_t);
+MPUSensor mpuSensor(
+	delta_t
+	// MPU6050_ACCEL_FS_4,
+	// MPU6050_GYRO_FS_250,
+	// MPU6050_DLPF_BW_42,
+	// MPU6050_ADDRESS_AD0_HIGH
+);
+
 MotorsController motorsController(delta_t);
 
 const float pitch_ref = 0.0f;
@@ -24,6 +33,12 @@ void setup()
 
 	// Setup the MPU Sensor
 	mpuSensor.setup();
+
+	Serial.println("5 seconds before starting the motors ...");
+	delay(5000);
+
+	// Setup the motors
+	motorsController.setup();
 
 	loop_timer = micros() + delta_t_micros;
 }
@@ -64,7 +79,8 @@ void loop()
 
 #ifdef SERIAL_PLOTER
 	/**
-	 * Serial plotter data format: roll pitch yaw motor1_speed motor2_speed
+	 * Serial plotter data format:
+	 * 	roll	pitch	yaw 	control_signal
 	 */
 	Serial.print(mpuSensor.roll_deg);
 	Serial.print("\t");
@@ -74,7 +90,6 @@ void loop()
 	Serial.print("\t");
 	Serial.print(motorsController.control_signal);
 	Serial.print("\n");
-
 	/**
 	 * Serial plotter data format: a_roll g_roll a_pitch g_pitch g_yaw
 	 */

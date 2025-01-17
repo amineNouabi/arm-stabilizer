@@ -1,17 +1,8 @@
 #include "stabilizer.h"
 
 MPUSensor ::MPUSensor(
-	float delta_t, uint8_t mpu_address = MPU6050_DEFAULT_ADDRESS, uint8_t gyro_fs = MPU6050_GYRO_FS_250, uint8_t accel_fs = MPU6050_ACCEL_FS_4, uint8_t dlpf_bw = MPU6050_DLPF_BW_42)
+	float delta_t, uint8_t gyro_fs = MPU6050_GYRO_FS_250, uint8_t accel_fs = MPU6050_ACCEL_FS_4, uint8_t dlpf_bw = MPU6050_DLPF_BW_42, uint8_t mpu_address = MPU6050_DEFAULT_ADDRESS)
 	: accel_fs(accel_fs), gyro_fs(gyro_fs), dlpf_bw(dlpf_bw),
-	  roll_deg(0), pitch_deg(0), yaw_deg(0),
-	  roll_rad(0), pitch_rad(0), yaw_rad(0),
-	  a_roll(0), a_pitch(0),
-	  g_roll(0), g_pitch(0), g_yaw(0),
-	  ax_raw(0), ay_raw(0), az_raw(0),
-	  gx_raw(0), gy_raw(0), gz_raw(0),
-	  ax_g(0), ay_g(0), az_g(0),
-	  gx_rad_s(0), gy_rad_s(0), gz_rad_s(0),
-	  gx_deg_s(0), gy_deg_s(0), gz_deg_s(0),
 	  i2c(mpu_address, I2C_DEFAULT_TIMEOUT),
 	  delta_t(delta_t)
 {
@@ -87,7 +78,9 @@ int8_t MPUSensor::getDeviceId()
 {
 	uint8_t buffer;
 	if (i2c.readBits(MPU6050_RA_WHO_AM_I, MPU6050_WHO_AM_I_BIT, MPU6050_WHO_AM_I_LENGTH, &buffer) > 0)
+	{
 		return (buffer);
+	}
 	return (-1);
 }
 
@@ -251,20 +244,20 @@ void MPUSensor::readAndUpdate()
 	a_roll = atan2(-ay_g, sqrt(ax_g * ax_g + az_g * az_g)) * _r2d;
 	g_roll = roll_deg + gx_deg_s * delta_t;
 
-	roll_deg = _fusion_alpha * g_roll + (1 - _fusion_alpha) * a_roll;
+	roll_rad = (roll_deg = _fusion_alpha * g_roll + (1 - _fusion_alpha) * a_roll) / _r2d;
 
 	// Pitch calculation
 	a_pitch = atan2(ax_g, sqrt(ay_g * ay_g + az_g * az_g)) * _r2d;
 	g_pitch = pitch_deg + gy_deg_s * delta_t;
 
-	pitch_deg = _fusion_alpha * g_pitch + (1 - _fusion_alpha) * a_pitch;
+	roll_rad = (pitch_deg = _fusion_alpha * g_pitch + (1 - _fusion_alpha) * a_pitch) / _r2d;
 
 	// Yaw calculation
 	g_yaw = yaw_deg + gz_deg_s * delta_t;
-	yaw_deg = g_yaw;
+	yaw_rad = (yaw_deg = g_yaw) / _r2d;
 
 	///////////////////////////////////////////////////
-	// Roll calculation
+	// // Roll calculation
 	// a_roll = atan2(-ay_g, sqrt(ax_g * ax_g + az_g * az_g)) * _r2d;
 	// g_roll = roll_deg + delta_t * (gx_deg_s + sin(roll_rad) * tan(pitch_rad) * gy_deg_s + cos(roll_rad) * tan(pitch_rad) * gz_deg_s);
 

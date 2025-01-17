@@ -11,10 +11,10 @@ export const useAppStatus = (): {
   data?: Status;
   isLoading: boolean;
   error: Error | null;
-  updateBaudRate: UseMutateFunction<Status, Error, number>;
+  updateStatus: UseMutateFunction<Status, Error, number | undefined>;
   isPendingUpdate: boolean;
 } => {
-  const { getStatus, updateBaudRate } = useAppApi();
+  const { getStatus, updateStatus } = useAppApi();
   const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
@@ -24,10 +24,14 @@ export const useAppStatus = (): {
     retryDelay: 3000,
   });
 
-  const { mutate, isPending: isPendingUpdate } = useMutation({
-    mutationFn: updateBaudRate,
+  const { mutate, isPending: isPendingUpdate } = useMutation<
+    Status,
+    Error,
+    number | undefined
+  >({
+    mutationFn: updateStatus,
     onSuccess: async (updatedData) => {
-      toast({ title: 'Baud rate updated successfully' });
+      toast({ title: 'Status updated successfully' });
       try {
         await queryClient.invalidateQueries({ queryKey: [APP_STATUS_KEY] });
       } catch (refetchError) {
@@ -36,9 +40,9 @@ export const useAppStatus = (): {
     },
     onError: (mutateError) => {
       console.log(mutateError);
-      toast({ title: 'Error updating baud rate', variant: 'destructive' });
+      toast({ title: 'Error updating Status', variant: 'destructive' });
     },
   });
 
-  return { data, isLoading, error, updateBaudRate: mutate, isPendingUpdate };
+  return { data, isLoading, error, updateStatus: mutate, isPendingUpdate };
 };

@@ -22,7 +22,6 @@ This Turborepo includes the following packages and apps:
 - `dashboard`: a [Next.js](https://nextjs.org/) app
 - `@arm-stabilizer/eslint-config`: ESLint configurations used throughout the monorepo
 - `@arm-stabilizer/jest-presets`: Jest configurations
-- `@arm-stabilizer/logger`: isomorphic logger (a small wrapper around console.log)
 - `@arm-stabilizer/ui`: a dummy React UI library (which contains `<CounterButton>` and `<Link>` components)
 - `@arm-stabilizer/typescript-config`: tsconfig.json's used throughout the monorepo
 

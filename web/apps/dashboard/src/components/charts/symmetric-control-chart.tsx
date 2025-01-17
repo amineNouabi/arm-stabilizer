@@ -43,8 +43,8 @@ export function SymmetricControlChart(): React.ReactNode {
       am5xy.ValueAxis.new(controlRoot, {
         renderer: am5xy.AxisRendererY.new(controlRoot, {}),
         baseValue: 0,
-        max: 400,
-        min: -400,
+        max: 100,
+        min: -100,
         paddingTop: 20,
       }),
     );

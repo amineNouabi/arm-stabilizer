@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Select,
   SelectContent,
@@ -9,7 +11,9 @@ import {
 } from '@/components/ui/select';
 import { useAppStatus } from '@/hooks/use-app-status';
 import { Label } from '@radix-ui/react-label';
+import { RefreshCcw } from 'lucide-react';
 import * as React from 'react';
+import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Spinner } from '../ui/spinner';
 
@@ -21,22 +25,31 @@ export default function SerialCard({ ...props }): React.ReactNode {
     isLoading,
     error,
     isPendingUpdate,
-    updateBaudRate,
+    updateStatus,
   } = useAppStatus();
+
+  const onRefresh = (): void => {
+    updateStatus(115200);
+  };
 
   return (
     <Card {...props}>
-      <CardHeader>
-        <CardTitle>Arduino Serial Configuration: </CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between gap-2 px-4 py-2">
+        <CardTitle>Arduino Configuration: </CardTitle>
+        <Button
+          disabled={isLoading || isPendingUpdate}
+          onClick={onRefresh}
+          variant="ghost"
+        >
+          <RefreshCcw className="size-5" />
+        </Button>
       </CardHeader>
       <CardContent>
-        {isLoading || isPendingUpdate ? (
-          <Spinner />
-        ) : (
+        {serialConfig ? (
           <>
             <div className="flex items-center space-x-2 mb-2">
               <h1>Serial port:</h1>
-              {error || !serialConfig?.serialPath ? (
+              {error || !serialConfig.serialPath ? (
                 <span className="text-destructive">N/A</span>
               ) : (
                 <span className="text-green-600">
@@ -48,12 +61,12 @@ export default function SerialCard({ ...props }): React.ReactNode {
             <Label>Serial Baud Rate:</Label>
             <Select
               disabled={
-                Boolean(error) || !serialConfig?.baudRate || isPendingUpdate
+                Boolean(error) || !serialConfig.baudRate || isPendingUpdate
               }
               onValueChange={(newValue) => {
-                updateBaudRate(parseInt(newValue, 10));
+                updateStatus(parseInt(newValue, 10));
               }}
-              value={serialConfig?.baudRate.toString() || 'N/A'}
+              value={serialConfig.baudRate.toString() || 'N/A'}
             >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a baudrate" />
@@ -70,7 +83,9 @@ export default function SerialCard({ ...props }): React.ReactNode {
               </SelectContent>
             </Select>
           </>
-        )}
+        ) : isLoading || isPendingUpdate ? (
+          <Spinner />
+        ) : null}
       </CardContent>
     </Card>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAppStatus } from '@/hooks/use-app-status';
 import { useSocket } from '@/providers/socket-provider';
 import * as am5 from '@amcharts/amcharts5';
 import am5themesDark from '@amcharts/amcharts5/themes/Dark';
@@ -8,8 +9,9 @@ import am5themesResponsive from '@amcharts/amcharts5/themes/Responsive';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
+import { Skeleton } from '../ui/skeleton';
 
-const MAX_DATA_POINTS = 700; // Define the maximum number of data points
+const MAX_DATA_POINTS = 1000; // Define the maximum number of data points
 
 let controlRoot: am5.Root;
 
@@ -24,7 +26,8 @@ let controlLegend: am5.Legend;
 
 export function ControlChart(): React.ReactNode {
   const { theme } = useTheme();
-  const { data } = useSocket();
+  const { data, isConnected } = useSocket();
+  const { data: apiStatus } = useAppStatus();
 
   useEffect(() => {
     controlRoot = am5.Root.new('control-chart');
@@ -48,8 +51,8 @@ export function ControlChart(): React.ReactNode {
       am5xy.ValueAxis.new(controlRoot, {
         renderer: am5xy.AxisRendererY.new(controlRoot, {}),
         baseValue: 0,
-        max: 400,
-        min: -400,
+        max: 100,
+        min: -100,
         paddingTop: 0,
       }),
     );
@@ -113,6 +116,17 @@ export function ControlChart(): React.ReactNode {
         <CardTitle>Control Chart : </CardTitle>
       </CardHeader>
       <CardContent className="min-h-[300px] " id="control-chart" />
+    </Card>
+  );
+}
+
+export function ChartSkeleton(): React.ReactNode {
+  return (
+    <Card className="pr-3 pb-5">
+      <CardHeader>
+        <Skeleton className="min-h-[100px] h-4" />
+      </CardHeader>
+      <CardContent className="min-h-[300px] " />
     </Card>
   );
 }

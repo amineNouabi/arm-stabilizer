@@ -1,5 +1,6 @@
 'use client';
 
+import { useAppStatus } from '@/hooks/use-app-status';
 import { useInitializeSocket } from '@/hooks/use-initialize-socket';
 import socket from '@/lib/socket';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -27,6 +28,14 @@ export function SocketProvider({
 
   const isConnected = useInitializeSocket();
 
+  const {
+    data: serialConfig,
+    isLoading,
+    error,
+    isPendingUpdate,
+    updateStatus,
+  } = useAppStatus();
+
   useEffect(() => {
     socket.on('data', (receivedData: string) => {
       const splittedData = receivedData.trim().split('\t');
@@ -44,8 +53,13 @@ export function SocketProvider({
       }
     });
 
+    socket.on('serial-closed', () => {
+      updateStatus(115200);
+    });
+
     return () => {
       socket.off('data');
+      socket.off('serial-closed');
     };
   }, []);
 
