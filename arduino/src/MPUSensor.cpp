@@ -244,17 +244,22 @@ void MPUSensor::readAndUpdate()
 	a_roll = atan2(-ay_g, sqrt(ax_g * ax_g + az_g * az_g)) * _r2d;
 	g_roll = roll_deg + gx_deg_s * delta_t;
 
-	roll_rad = (roll_deg = _fusion_alpha * g_roll + (1 - _fusion_alpha) * a_roll) / _r2d;
+	roll_deg = _fusion_alpha * g_roll + (1 - _fusion_alpha) * a_roll;
+
+	roll_rad = roll_deg / _r2d;
 
 	// Pitch calculation
 	a_pitch = atan2(ax_g, sqrt(ay_g * ay_g + az_g * az_g)) * _r2d;
 	g_pitch = pitch_deg + gy_deg_s * delta_t;
 
-	roll_rad = (pitch_deg = _fusion_alpha * g_pitch + (1 - _fusion_alpha) * a_pitch) / _r2d;
+	pitch_deg = _fusion_alpha * g_pitch + (1 - _fusion_alpha) * a_pitch;
+	pitch_rad = pitch_deg / _r2d;
 
 	// Yaw calculation
 	g_yaw = yaw_deg + gz_deg_s * delta_t;
-	yaw_rad = (yaw_deg = g_yaw) / _r2d;
+
+	yaw_deg = g_yaw;
+	yaw_rad = yaw_deg / _r2d;
 
 	///////////////////////////////////////////////////
 	// // Roll calculation

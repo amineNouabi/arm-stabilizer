@@ -27,7 +27,7 @@ The hardware consists of the following components:
 
 ## Software
 
-There are 3 main software components:
+The software consists of the following components:
 
 - `arduino`: The code that runs on the microcontroller
 - `web`: a server and dashboard that displays data from the microcontroller.
@@ -41,16 +41,20 @@ The arduino code reads the angle of the arm from the IMU sensor and applies a to
 - `MPUSensor`: A class that encapsulates the MPU sensor readings and configuration using `I2CInterface` and filtering.
 - `I2CInterface`: A class that encapsulates the I2C communication with the MPU sensor.
 - `MotorsController`: A class that encapsulates the motor control logic and the PID controller.
+- `PIDController`: A class that encapsulates the PID controller logic.
 
-### Dashboard
+### Web
 
-The dashboard is a web application that displays data from the microcontroller in real-time. The dashboard is built using Chart.js.
+For more details, see the [web directory README](web/README.md).
 
-### Server
+#### Server
 
-The server communicates with the microcontroller and emits data to the dashboard. The server is built using Node.js and Socket.io.
+The server communicates with the microcontroller through a serial port and emits data through websockets to the dashboard. The server is built using Node.js and Socket.io.
+
+#### Dashboard
+
+The dashboard is a web application that displays data from the microcontroller in real-time. The dashboard is built using am5Charts and Socket.io.
 
 ## Authors
 
 - [Ahmed Amine Nouabi](https://github.com/amineNouabi)
-- [Soufiane Finiix]

@@ -31,14 +31,14 @@ void setup()
 	Serial.println("------------------------------------------------------------------");
 #endif
 
-	// Setup the MPU Sensor
-	mpuSensor.setup();
-
 	Serial.println("5 seconds before starting the motors ...");
 	delay(5000);
 
 	// Setup the motors
 	motorsController.setup();
+
+	// Setup the MPU Sensor
+	mpuSensor.setup();
 
 	loop_timer = micros() + delta_t_micros;
 }

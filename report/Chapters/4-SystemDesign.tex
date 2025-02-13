@@ -38,12 +38,33 @@
 \paragraph{Pour assurer la fluidité de la rotation de la barre rotative, on va utiliser un roulement à billes pour la liaison pivot. Ce roulement à billes sera fixé à la base et à la barre rotative.}
 
 \paragraph{La partie fixe est composée d'une base qui supporte la barre rotative et une table de bois.}
+\paragraph*{}
 \begin{figure}[!htpb]
 	\centering
 	\includegraphics[width=\linewidth]{Figures/3d-cad.png}
 	\caption{Modele 3D du design mecanique}
 	\label{fig:3d-model}
 \end{figure}
+
+\newpage
+\paragraph{Après avoir couper et souder les différentes pièces metaliques pour former le modèle, on va obtenir le modèle mecanique comme montré ci-dessous.}
+\paragraph*{}
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.8\linewidth]{Figures/model-mec-1.jpeg}
+	\caption{Modèle Mecanique 1}
+	\label{fig:real-model}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.8\linewidth]{Figures/model-mec-2.jpeg}
+	\caption{Modèle Mecanique 2}
+	\label{fig:real-model-2}
+\end{figure}
+
+
+
 \section{Conception Électronique}
 
 \subsection{Carte d'aquisition et de controle}
@@ -133,40 +154,3 @@
 \end{figure}
 
 \newpage
-
-\section{Conception du Système de Contrôle}
-
-\paragraph{Dans ce problème, on peut utiliser une commande symetrique pour stabiliser le système. La commande symetrique consiste a utiliser une seule sortie du controlleur PID pour controler les deux moteurs.}
-
-\paragraph{On va utiliser un controlleur PID pour controler la position de la barre rotative. Le controlleur PID va prendre en entrée l'angle de la barre rotative et va donner en sortie la vitesse des moteurs.}
-
-
-\begin{figure}[!htpb]
-	\centering
-	\includegraphics[width=\linewidth]{Figures/pid-schema.png}
-	\caption{PID Design}
-	\label{fig:pid-design}
-\end{figure}
-
-\paragraph{On nomme $\alpha$ la sortie du controlleur PID, $\phi$ l'angle de la barre rotative et $\gamma$ la commande du motor.}
-\paragraph{Pour ce systeme on aura une consigne nulle pour stabiliser la barre rotative a $\phi = 0$.}
-
-\paragraph{Donc l'equation du controlleur PID sera :}
-
-\begin{equation}
-	\alpha = - K_p \phi - K_i \int \phi dt - K_d \frac{d\phi}{dt}
-\end{equation}
-
-\paragraph{Ou $K_p$, $K_i$ et $K_d$ sont les coefficients du controlleur PID.}
-
-\paragraph{Sachant que la commande du moteur est par un signal PWM par $T_{on}$ avec $1000 \leq T_{on} \leq 2000$ (en microsecondes).}
-
-\paragraph{On prends la valeure moyenne centrale de $T_{on}$ et on l'ajoute $\alpha$ pour le premier moteur et on soustrait $\alpha$ pour le deuxieme moteur.}
-
-\paragraph{Donc la commande des moteurs sera :}
-
-\begin{equation}
-	\gamma = 1500 \pm \alpha
-\end{equation}
-
-\paragraph{Il faut assurer une plage de $\alpha$ adequat pour ne pas depasser la plage de $T_{on}$ des ESC. par exemple $ -400 \leq \alpha \leq 400$. pour ne pas toucher les limites des ESC.}

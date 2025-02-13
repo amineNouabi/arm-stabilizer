@@ -1,29 +1,39 @@
-# Turborepo kitchen sink starter
+# Web MonoRepo for Arm Stabilizer
 
-This is an official starter Turborepo with multiple meta-frameworks all working in harmony and sharing packages.
+This is a monorepo for the Arm Stabilizer project. It contains the following packages:
 
-This example also shows how to use [Workspace Configurations](https://turbo.build/repo/docs/core-concepts/monorepos/configuring-workspaces).
+- `api`: an [Express](https://expressjs.com/) server
+- `dashboard`: a [Next.js](https://nextjs.org/) app
 
-## Using this example
+## Getting Started
 
-Run the following command:
+### Prerequisites
 
-```sh
-npx create-turbo@latest -e kitchen-sink
+- [Node.js](https://nodejs.org/en/) (v >=18)
+- [pnpm](https://pnpm.io/) (v = 10.0.0)
+
+### Installation
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/amineNouabi/arm-stabilizer
+
+cd arm-stabilizer/web
+
+pnpm install
 ```
 
-## What's inside?
+2. Start the development server
 
-This Turborepo includes the following packages and apps:
+```bash
+pnpm dev
+```
 
 ### Apps and Packages
 
 - `api`: an [Express](https://expressjs.com/) server
 - `dashboard`: a [Next.js](https://nextjs.org/) app
-- `@arm-stabilizer/eslint-config`: ESLint configurations used throughout the monorepo
-- `@arm-stabilizer/jest-presets`: Jest configurations
-- `@arm-stabilizer/ui`: a dummy React UI library (which contains `<CounterButton>` and `<Link>` components)
-- `@arm-stabilizer/typescript-config`: tsconfig.json's used throughout the monorepo
 
 Each package and app is 100% [TypeScript](https://www.typescriptlang.org/).
 
@@ -33,5 +43,4 @@ This Turborepo has some additional tools already setup for you:
 
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
 - [ESLint](https://eslint.org/) for code linting
-- [Jest](https://jestjs.io) test runner for all things JavaScript
 - [Prettier](https://prettier.io) for code formatting
